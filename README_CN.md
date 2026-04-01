@@ -87,7 +87,7 @@
 git clone https://github.com/roger2ai/Claude-Code-Compiled.git
 cd Claude-Code-Compiled
 
-# 安装依赖
+# 安装依赖（postinstall 自动创建 @ant/* stub）
 bun install
 
 # 修补 Commander.js（多字符短标志不支持）
@@ -215,17 +215,16 @@ claude-code/
 | WorkflowTool | `feature('WORKFLOW_SCRIPTS')` 返回 false |
 | TungstenTool | `USER_TYPE=ant` 条件不满足 |
 
-### 缺失的内部包（无运行时影响）
+### 缺失的内部包（postinstall 自动创建 stub）
 
-所有 `@ant/*` 包引用都在 `feature()` 守卫的 dead code 分支内，编译时被完全剔除：
+所有 `@ant/*` 包引用都在 `feature()` 守卫的 dead code 分支内，编译时被完全剔除。Stub 由 `scripts/postinstall.sh` 在 `bun install` 后自动创建：
 
-| 包 | 用途 | 影响 |
-|------|------|------|
-| `@ant/claude-for-chrome-mcp` | Chrome 浏览器 MCP | 无 — dead code |
-| `@ant/computer-use-mcp` | Computer Use MCP | 无 — dead code |
-| `@ant/computer-use-input` | 鼠标/键盘控制 | 无 — dead code |
-| `@ant/computer-use-swift` | macOS 原生截图 | 无 — dead code |
-| `@anthropic-ai/claude-agent-sdk` | SDK 类型引用 | 无 — 仅 `import type` |
+| 包 | 用途 | 处理方式 |
+|------|------|----------|
+| `@ant/claude-for-chrome-mcp` | Chrome 浏览器 MCP | postinstall stub — dead code |
+| `@ant/computer-use-mcp` | Computer Use MCP | postinstall stub — dead code |
+| `@ant/computer-use-input` | 鼠标/键盘控制 | postinstall stub — dead code |
+| `@ant/computer-use-swift` | macOS 原生截图 | postinstall stub — dead code |
 
 **总结：所有核心 CLI 功能（文件操作、命令执行、搜索、API 调用、MCP 集成）均可正常使用。缺失的功能均为 Anthropic 内部实验性功能，在官方公开版本中同样不存在。**
 

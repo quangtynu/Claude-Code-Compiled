@@ -87,7 +87,7 @@ Two Anthropic-internal packages that can't be installed from npm:
 git clone https://github.com/roger2ai/Claude-Code-Compiled.git
 cd Claude-Code-Compiled
 
-# Install dependencies
+# Install dependencies (postinstall auto-creates @ant/* stubs)
 bun install
 
 # Patch Commander.js (multi-char short flags not supported upstream)
@@ -215,17 +215,16 @@ These Anthropic-internal experimental features are disabled via `feature()` flag
 | WorkflowTool | Gated behind `feature('WORKFLOW_SCRIPTS')` |
 | TungstenTool | Gated behind `USER_TYPE=ant` |
 
-### Missing Internal Packages (no runtime impact)
+### Missing Internal Packages (auto-created by postinstall)
 
-All `@ant/*` package references are behind `feature()` guards and tree-shaken at build time:
+All `@ant/*` package references are behind `feature()` guards and tree-shaken at build time. Stubs are auto-created by `scripts/postinstall.sh` after `bun install`:
 
-| Package | Purpose | Impact |
-|---------|---------|--------|
-| `@ant/claude-for-chrome-mcp` | Chrome browser MCP | None — dead code |
-| `@ant/computer-use-mcp` | Computer Use MCP | None — dead code |
-| `@ant/computer-use-input` | Mouse/keyboard control | None — dead code |
-| `@ant/computer-use-swift` | macOS native screenshots | None — dead code |
-| `@anthropic-ai/claude-agent-sdk` | SDK type reference | None — `import type` only |
+| Package | Purpose | How It's Handled |
+|---------|---------|------------------|
+| `@ant/claude-for-chrome-mcp` | Chrome browser MCP | Stub in postinstall — dead code |
+| `@ant/computer-use-mcp` | Computer Use MCP | Stub in postinstall — dead code |
+| `@ant/computer-use-input` | Mouse/keyboard control | Stub in postinstall — dead code |
+| `@ant/computer-use-swift` | macOS native screenshots | Stub in postinstall — dead code |
 
 **Summary: All core CLI functionality (file ops, commands, search, API calls, MCP) works. Missing features are Anthropic-internal experiments not available in the official release either.**
 
